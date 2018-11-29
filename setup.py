@@ -5,27 +5,25 @@ from setuptools import setup
 # version = ".".join([str(v) for v in version_tuple])
 
 setup(
-    name='xadmin',
+    name='xadmin2',
     version='0.6.1',
-    description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
+    description=
+    'Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.rst', encoding='utf-8').read(),
-    author='sshwsfc',
-    author_email='sshwsfc@gmail.com',
+    author='wgbbiao',
+    author_email='wgb237@163.com',
     license=open('LICENSE', encoding='utf-8').read(),
     url='http://www.xadmin.io',
     download_url='http://github.com/sshwsfc/django-xadmin/archive/master.zip',
-    packages=['xadmin', 'xadmin.migrations', 'xadmin.plugins', 'xadmin.templatetags', 'xadmin.views'],
+    packages=[
+        'xadmin', 'xadmin.migrations', 'xadmin.plugins', 'xadmin.templatetags',
+        'xadmin.views'
+    ],
     include_package_data=True,
     install_requires=[
-        'setuptools',
-        'django>=1.9.0',
-        'django-crispy-forms>=1.6.0',
-        'django-reversion>=2.0.0',
-        'django-formtools>=1.0',
-        'django-import-export>=0.5.1',
-        'httplib2==0.9.2',
-        'future',
-        'six'
+        'setuptools', 'django>=1.9.0', 'django-crispy-forms>=1.6.0',
+        'django-reversion>=2.0.0', 'django-formtools>=1.0',
+        'django-import-export>=0.5.1', 'httplib2==0.9.2', 'future', 'six'
     ],
     extras_require={
         'Excel': ['xlwt', 'xlsxwriter'],
@@ -47,5 +45,4 @@ setup(
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Topic :: Software Development :: Libraries :: Python Modules",
-    ]
-)
+    ])
