@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name='xadmin2',
-    version='0.6.1',
+    version='2.0.1',
     description=
     'Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.rst', encoding='utf-8').read(),
@@ -21,7 +21,7 @@ setup(
     ],
     include_package_data=True,
     install_requires=[
-        'setuptools', 'django>=1.9.0', 'django-crispy-forms>=1.6.0',
+        'setuptools', 'django>=2', 'django-crispy-forms>=1.6.0',
         'django-reversion>=2.0.0', 'django-formtools>=1.0',
         'django-import-export>=0.5.1', 'httplib2==0.9.2', 'future', 'six'
     ],

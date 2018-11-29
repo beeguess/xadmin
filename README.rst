@@ -54,24 +54,19 @@ Xadmin is best installed via PyPI. To install the latest version, run:
 
 .. code:: bash
 
-    pip install xadmin
+    pip install xadmin2
 
 or Install from github source:
 
 .. code:: bash
 
-    pip install git+git://github.com/sshwsfc/xadmin.git
+    pip install git+git://github.com/beeguess/xadmin.git
 
-Install from github source for Django 2.0:
-
-.. code:: bash
-
-    pip install git+git://github.com/sshwsfc/xadmin.git@django2
 
 Install Requires 
 ----------------
 
--  `django`_ >=1.9
+-  `django`_ >=2
 
 -  `django-crispy-forms`_ >=1.6.0 (For xadmin crispy forms)
 
@@ -101,6 +96,9 @@ Documentation
 
 Changelogs
 -------------
+2.0.1
+^^^^^
+- Compact with Django2.0.
 
 0.6.0
 ^^^^^
@@ -110,7 +108,6 @@ Changelogs
 
 0.5.0
 ^^^^^
-    
 - Update fontawesome to 4.0.3
 - Update javascript files to compact fa icons new version
 - Update tests for the new instance method of the AdminSite class
