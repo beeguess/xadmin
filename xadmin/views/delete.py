@@ -3,7 +3,6 @@ from django.db import transaction, router
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django import VERSION as django_version
-from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
@@ -22,7 +21,8 @@ class DeleteAdminView(ModelAdminView):
         if django_version > (2, 0):
             for model in self.admin_site._registry:
                 if not hasattr(self.admin_site._registry[model], 'has_delete_permission'):
-                    setattr(self.admin_site._registry[model], 'has_delete_permission', self.has_delete_permission)
+                    setattr(
+                        self.admin_site._registry[model], 'has_delete_permission', self.has_delete_permission)
         super(DeleteAdminView, self).__init__(request, *args, **kwargs)
 
     def init_request(self, object_id, *args, **kwargs):
@@ -33,7 +33,8 @@ class DeleteAdminView(ModelAdminView):
             raise PermissionDenied
 
         if self.obj is None:
-            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % {'name': force_text(self.opts.verbose_name), 'key': escape(object_id)})
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % {
+                          'name': force_text(self.opts.verbose_name), 'key': escape(object_id)})
 
         using = router.db_for_write(self.model)
 
@@ -64,8 +65,7 @@ class DeleteAdminView(ModelAdminView):
         self.delete_model()
 
         response = self.post_response()
-        cls_str = str if six.PY3 else basestring
-        if isinstance(response, cls_str):
+        if isinstance(response, str):
             response = HttpResponseRedirect(response)
         return response
 

@@ -4,7 +4,6 @@ Created on Mar 26, 2014
 @author: LAB_ADM
 '''
 from future.utils import iteritems
-from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from xadmin.filters import manager, MultiSelectFieldListFilter
 from xadmin.plugins.filters import *
@@ -30,7 +29,8 @@ class QuickFilterPlugin(BaseAdminPlugin):
     free_query_filter = True
 
     def init_request(self, *args, **kwargs):
-        menu_style_accordian = hasattr(self.admin_view, 'menu_style') and self.admin_view.menu_style == 'accordion'
+        menu_style_accordian = hasattr(
+            self.admin_view, 'menu_style') and self.admin_view.menu_style == 'accordion'
         return bool(self.list_quick_filter) and not menu_style_accordian
 
     # Media
@@ -83,7 +83,8 @@ class QuickFilterPlugin(BaseAdminPlugin):
         return clean_lookup in self.list_quick_filter
 
     def get_list_queryset(self, queryset):
-        lookup_params = dict([(smart_str(k)[len(FILTER_PREFIX):], v) for k, v in self.admin_view.params.items() if smart_str(k).startswith(FILTER_PREFIX) and v != ''])
+        lookup_params = dict([(smart_str(k)[len(FILTER_PREFIX):], v) for k, v in self.admin_view.params.items(
+        ) if smart_str(k).startswith(FILTER_PREFIX) and v != ''])
         for p_key, p_val in iteritems(lookup_params):
             if p_val == "False":
                 lookup_params[p_key] = False
@@ -94,13 +95,15 @@ class QuickFilterPlugin(BaseAdminPlugin):
 
         # for clean filters
         self.admin_view.quickfilter['has_query_param'] = bool(lookup_params)
-        self.admin_view.quickfilter['clean_query_url'] = self.admin_view.get_query_string(remove=[k for k in self.request.GET.keys() if k.startswith(FILTER_PREFIX)])
+        self.admin_view.quickfilter['clean_query_url'] = self.admin_view.get_query_string(
+            remove=[k for k in self.request.GET.keys() if k.startswith(FILTER_PREFIX)])
 
         # Normalize the types of keys
         if not self.free_query_filter:
             for key, value in lookup_params.items():
                 if not self.lookup_allowed(key, value):
-                    raise SuspiciousOperation("Filtering by %s not allowed" % key)
+                    raise SuspiciousOperation(
+                        "Filtering by %s not allowed" % key)
 
         self.filter_specs = []
         if self.list_quick_filter:
@@ -137,13 +140,15 @@ class QuickFilterPlugin(BaseAdminPlugin):
                     spec.title = "%s %s" % (field_parts[-2].name, spec.title)
 
                 # Check if we need to use distinct()
-                use_distinct = True  # (use_distinct orlookup_needs_distinct(self.opts, field_path))
+                # (use_distinct orlookup_needs_distinct(self.opts, field_path))
+                use_distinct = True
                 if spec and spec.has_output():
                     try:
                         new_qs = spec.do_filte(queryset)
                     except ValidationError as e:
                         new_qs = None
-                        self.admin_view.message_user(_("<b>Filtering error:</b> %s") % e.messages[0], 'error')
+                        self.admin_view.message_user(
+                            _("<b>Filtering error:</b> %s") % e.messages[0], 'error')
                     if new_qs is not None:
                         queryset = new_qs
 
@@ -152,8 +157,7 @@ class QuickFilterPlugin(BaseAdminPlugin):
         self.has_filters = bool(self.filter_specs)
         self.admin_view.quickfilter['filter_specs'] = self.filter_specs
         obj = filter(lambda f: f.is_used, self.filter_specs)
-        if six.PY3:
-            obj = list(obj)
+        obj = list(obj)
         self.admin_view.quickfilter['used_filter_num'] = len(obj)
 
         if use_distinct:
@@ -164,5 +168,6 @@ class QuickFilterPlugin(BaseAdminPlugin):
     def block_left_navbar(self, context, nodes):
         nodes.append(loader.render_to_string('xadmin/blocks/modal_list.left_navbar.quickfilter.html',
                                              get_context_dict(context)))
+
 
 site.register_plugin(QuickFilterPlugin, ListAdminView)

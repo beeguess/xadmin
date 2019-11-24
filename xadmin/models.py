@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from django.urls.base import reverse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.base import ModelBase
-from django.utils.encoding import python_2_unicode_compatible, smart_text
+from django.utils.encoding import smart_text
 
 from django.db.models.signals import post_migrate
 from django.contrib.auth.models import Permission
@@ -38,14 +38,15 @@ def add_view_permissions(sender, **kwargs):
                                       name="Can view %s" % content_type.name)
             # print "Added view permission for %s" % content_type.name
 
+
 # check for all our view permissions after a syncdb
 post_migrate.connect(add_view_permissions)
 
 
-@python_2_unicode_compatible
 class Bookmark(models.Model):
     title = models.CharField(_(u'Title'), max_length=128)
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_(u"user"), blank=True, null=True)
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_(
+        u"user"), blank=True, null=True)
     url_name = models.CharField(_(u'Url Name'), max_length=64)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     query = models.CharField(_(u'Query String'), max_length=1000, blank=True)
@@ -84,9 +85,9 @@ class JSONEncoder(DjangoJSONEncoder):
                 return smart_text(o)
 
 
-@python_2_unicode_compatible
 class UserSettings(models.Model):
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_(u"user"))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_(u"user"))
     key = models.CharField(_('Settings Key'), max_length=256)
     value = models.TextField(_('Settings Content'))
 
@@ -104,9 +105,9 @@ class UserSettings(models.Model):
         verbose_name_plural = _('User Settings')
 
 
-@python_2_unicode_compatible
 class UserWidget(models.Model):
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_(u"user"))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_(u"user"))
     page_id = models.CharField(_(u"Page"), max_length=256)
     widget_type = models.CharField(_(u"Widget Type"), max_length=50)
     value = models.TextField(_(u"Widget Params"))
@@ -127,7 +128,8 @@ class UserWidget(models.Model):
             try:
                 portal_pos = UserSettings.objects.get(
                     user=self.user, key="dashboard:%s:pos" % self.page_id)
-                portal_pos.value = "%s,%s" % (self.pk, portal_pos.value) if portal_pos.value else self.pk
+                portal_pos.value = "%s,%s" % (
+                    self.pk, portal_pos.value) if portal_pos.value else self.pk
                 portal_pos.save()
             except Exception:
                 pass
@@ -140,7 +142,6 @@ class UserWidget(models.Model):
         verbose_name_plural = _('User Widgets')
 
 
-@python_2_unicode_compatible
 class Log(models.Model):
     action_time = models.DateTimeField(
         _('action time'),
@@ -152,7 +153,8 @@ class Log(models.Model):
         models.CASCADE,
         verbose_name=_('user'),
     )
-    ip_addr = models.GenericIPAddressField(_('action ip'), blank=True, null=True)
+    ip_addr = models.GenericIPAddressField(
+        _('action ip'), blank=True, null=True)
     content_type = models.ForeignKey(
         ContentType,
         models.SET_NULL,

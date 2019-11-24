@@ -3,7 +3,6 @@ from itertools import chain
 
 from django.urls.base import reverse
 from django.db.models.options import PROXY_PARENTS
-from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
@@ -208,8 +207,7 @@ class EditRelateDisplayPlugin(BaseRelateDisplayPlugin):
         return datas
 
     def post_response(self, response):
-        cls_str = str if six.PY3 else basestring
-        if isinstance(response, cls_str) and response != self.get_admin_url('index'):
+        if isinstance(response, str) and response != self.get_admin_url('index'):
             return self._get_url(response)
         return response
 
@@ -225,13 +223,13 @@ class EditRelateDisplayPlugin(BaseRelateDisplayPlugin):
 class DeleteRelateDisplayPlugin(BaseRelateDisplayPlugin):
 
     def post_response(self, response):
-        cls_str = str if six.PY3 else basestring
-        if isinstance(response, cls_str) and response != self.get_admin_url('index'):
+        if isinstance(response, str) and response != self.get_admin_url('index'):
             return self._get_url(response)
         return response
 
     def block_form_fields(self, context, nodes):
         return self._get_input()
+
 
 site.register_plugin(RelateMenuPlugin, ListAdminView)
 site.register_plugin(ListRelateDisplayPlugin, ListAdminView)

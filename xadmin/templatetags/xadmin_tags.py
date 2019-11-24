@@ -1,6 +1,5 @@
 from django import template
 from django.template import Library
-from django.utils import six
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 
@@ -18,12 +17,11 @@ def view_block(context, block_name, *args, **kwargs):
     nodes = []
     method_name = 'block_%s' % block_name
 
-    cls_str = str if six.PY3 else basestring
     for view in [admin_view] + admin_view.plugins:
         if hasattr(view, method_name) and callable(getattr(view, method_name)):
             block_func = getattr(view, method_name)
             result = block_func(context, nodes, *args, **kwargs)
-            if result and isinstance(result, cls_str):
+            if result and isinstance(result, str):
                 nodes.append(result)
     if nodes:
         return mark_safe(''.join(nodes))
@@ -62,7 +60,8 @@ def do_blockcapture(parser, token):
     try:
         tag_name, args = token.contents.split(None, 1)
     except ValueError:
-        raise template.TemplateSyntaxError("'blockcapture' node requires a variable name.")
+        raise template.TemplateSyntaxError(
+            "'blockcapture' node requires a variable name.")
 
     nodelist = parser.parse(('endblockcapture',))
     parser.delete_first_token()

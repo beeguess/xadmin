@@ -8,7 +8,6 @@ from django.db import models, transaction
 from django.forms.models import modelform_factory
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.template import loader
@@ -19,6 +18,7 @@ from xadmin.util import unquote
 from xadmin.views.detail import DetailAdminUtil
 
 from .base import CommAdminView, filter_hook, csrf_protect_m
+
 
 class FormAdminView(CommAdminView):
     form = forms.ModelForm
@@ -57,21 +57,23 @@ class FormAdminView(CommAdminView):
 
         if layout is None:
             layout = Layout(Container(Col('full',
-                Fieldset("", *fields, css_class="unsort no_title"), horizontal=True, span=12)
-            ))
+                                          Fieldset("", *fields, css_class="unsort no_title"), horizontal=True, span=12)
+                                      ))
         elif type(layout) in (list, tuple) and len(layout) > 0:
             if isinstance(layout[0], Column):
                 fs = layout
             elif isinstance(layout[0], (Fieldset, TabHolder)):
                 fs = (Col('full', *layout, horizontal=True, span=12),)
             else:
-                fs = (Col('full', Fieldset("", *layout, css_class="unsort no_title"), horizontal=True, span=12),)
+                fs = (Col('full', Fieldset("", *layout,
+                                           css_class="unsort no_title"), horizontal=True, span=12),)
 
             layout = Layout(Container(*fs))
 
             rendered_fields = [i[1] for i in layout.get_field_names()]
             container = layout[0].fields
-            other_fieldset = Fieldset(_(u'Other Fields'), *[f for f in fields if f not in rendered_fields])
+            other_fieldset = Fieldset(
+                _(u'Other Fields'), *[f for f in fields if f not in rendered_fields])
 
             if len(other_fieldset.fields):
                 if len(container) and isinstance(container[0], Column):
@@ -112,8 +114,7 @@ class FormAdminView(CommAdminView):
         if self.valid_forms():
             self.save_forms()
             response = self.post_response()
-            cls_str = str if six.PY3 else basestring
-            if isinstance(response, cls_str):
+            if isinstance(response, str):
                 return HttpResponseRedirect(response)
             else:
                 return response
@@ -143,7 +144,8 @@ class FormAdminView(CommAdminView):
         if self.request_method == 'get':
             data['initial'].update(self.request.GET)
         else:
-            data.update({'data': self.request.POST, 'files': self.request.FILES})
+            data.update({'data': self.request.POST,
+                         'files': self.request.FILES})
         return data
 
     @filter_hook

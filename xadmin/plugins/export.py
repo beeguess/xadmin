@@ -5,7 +5,6 @@ from future.utils import iteritems
 
 from django.http import HttpResponse
 from django.template import loader
-from django.utils import six
 from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
@@ -65,7 +64,7 @@ class ExportPlugin(BaseAdminPlugin):
     def _format_value(self, o):
         if (o.field is None and getattr(o.attr, 'boolean', False)) or \
            (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
-                value = o.value
+            value = o.value
         elif str(o.text).startswith("<span class='text-muted'>"):
             value = escape(str(o.text)[25:-7])
         else:
@@ -84,8 +83,9 @@ class ExportPlugin(BaseAdminPlugin):
         rows = context['results']
 
         new_rows = [[self._format_value(o) for o in
-            filter(lambda c:getattr(c, 'export', False), r.cells)] for r in rows]
-        new_rows.insert(0, [force_text(c.text) for c in context['result_headers'].cells if c.export])
+                     filter(lambda c:getattr(c, 'export', False), r.cells)] for r in rows]
+        new_rows.insert(0, [force_text(c.text)
+                            for c in context['result_headers'].cells if c.export])
         return new_rows
 
     def get_xlsx_export(self, context):
@@ -166,8 +166,7 @@ class ExportPlugin(BaseAdminPlugin):
         if isinstance(t, bool):
             return _('Yes') if t else _('No')
         t = t.replace('"', '""').replace(',', '\,')
-        cls_str = str if six.PY3 else basestring
-        if isinstance(t, cls_str):
+        if isinstance(t, str):
             t = '"%s"' % t
         return t
 
@@ -237,11 +236,13 @@ class ExportPlugin(BaseAdminPlugin):
         return __()
 
     def result_header(self, item, field_name, row):
-        item.export = not item.attr or field_name == '__str__' or getattr(item.attr, 'allow_export', True)
+        item.export = not item.attr or field_name == '__str__' or getattr(
+            item.attr, 'allow_export', True)
         return item
 
     def result_item(self, item, obj, field_name, row):
-        item.export = item.field or field_name == '__str__' or getattr(item.attr, 'allow_export', True)
+        item.export = item.field or field_name == '__str__' or getattr(
+            item.attr, 'allow_export', True)
         return item
 
 

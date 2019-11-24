@@ -5,7 +5,6 @@ from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.response import TemplateResponse
-from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, ungettext
@@ -60,7 +59,8 @@ class BaseActionView(ModelAdminView):
         if django_version > (2, 0):
             for model in self.admin_site._registry:
                 if not hasattr(self.admin_site._registry[model], 'has_delete_permission'):
-                    setattr(self.admin_site._registry[model], 'has_delete_permission', self.has_delete_permission)
+                    setattr(
+                        self.admin_site._registry[model], 'has_delete_permission', self.has_delete_permission)
 
 
 class DeleteSelectedAction(BaseActionView):
@@ -81,7 +81,8 @@ class DeleteSelectedAction(BaseActionView):
         n = queryset.count()
         if n:
             if self.delete_models_batch:
-                self.log('delete', _('Batch delete %(count)d %(items)s.') % {"count": n, "items": model_ngettext(self.opts, n)})
+                self.log('delete', _('Batch delete %(count)d %(items)s.') % {
+                         "count": n, "items": model_ngettext(self.opts, n)})
                 queryset.delete()
             else:
                 for obj in queryset:
@@ -107,7 +108,6 @@ class DeleteSelectedAction(BaseActionView):
             using = router.db_for_write(self.model)
             deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
                 queryset, self.opts, self.user, self.admin_site, using)
-
 
         # The user has already confirmed the deletion.
         # Do the deletion and return a None to display the change list view again.
@@ -244,8 +244,7 @@ class ActionPlugin(BaseAdminPlugin):
 
         # get_action might have returned None, so filter any of those out.
         actions = filter(None, actions)
-        if six.PY3:
-            actions = list(actions)
+        actions = list(actions)
 
         # Convert the actions into a OrderedDict keyed by name.
         actions = OrderedDict([
@@ -303,7 +302,8 @@ class ActionPlugin(BaseAdminPlugin):
     # Media
     def get_media(self, media):
         if self.actions and self.admin_view.result_count:
-            media = media + self.vendor('xadmin.plugin.actions.js', 'xadmin.plugins.css')
+            media = media + \
+                self.vendor('xadmin.plugin.actions.js', 'xadmin.plugins.css')
         return media
 
     # Block Views

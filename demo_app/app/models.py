@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import Group
 from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -24,7 +23,6 @@ SERVICE_TYPES = (
 )
 
 
-@python_2_unicode_compatible
 class IDC(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField()
@@ -45,11 +43,11 @@ class IDC(models.Model):
         verbose_name_plural = verbose_name
 
 
-@python_2_unicode_compatible
 class Host(models.Model):
     idc = models.ForeignKey(IDC, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
-    nagios_name = models.CharField(u"Nagios Host ID", max_length=64, blank=True, null=True)
+    nagios_name = models.CharField(
+        u"Nagios Host ID", max_length=64, blank=True, null=True)
     ip = models.GenericIPAddressField(blank=True, null=True)
     internal_ip = models.GenericIPAddressField(blank=True, null=True)
     user = models.CharField(max_length=64)
@@ -57,23 +55,28 @@ class Host(models.Model):
     ssh_port = models.IntegerField(blank=True, null=True)
     status = models.SmallIntegerField(choices=SERVER_STATUS)
 
-    brand = models.CharField(max_length=64, choices=[(i, i) for i in (u"DELL", u"HP", u"Other")])
+    brand = models.CharField(max_length=64, choices=[
+                             (i, i) for i in (u"DELL", u"HP", u"Other")])
     model = models.CharField(max_length=64)
     cpu = models.CharField(max_length=64)
-    core_num = models.SmallIntegerField(choices=[(i * 2, "%s Cores" % (i * 2)) for i in range(1, 15)])
+    core_num = models.SmallIntegerField(
+        choices=[(i * 2, "%s Cores" % (i * 2)) for i in range(1, 15)])
     hard_disk = models.IntegerField()
     memory = models.IntegerField()
 
-    system = models.CharField(u"System OS", max_length=32, choices=[(i, i) for i in (u"CentOS", u"FreeBSD", u"Ubuntu")])
+    system = models.CharField(u"System OS", max_length=32, choices=[
+                              (i, i) for i in (u"CentOS", u"FreeBSD", u"Ubuntu")])
     system_version = models.CharField(max_length=32)
-    system_arch = models.CharField(max_length=32, choices=[(i, i) for i in (u"x86_64", u"i386")])
+    system_arch = models.CharField(max_length=32, choices=[
+                                   (i, i) for i in (u"x86_64", u"i386")])
 
     create_time = models.DateField()
     guarantee_date = models.DateField()
     service_type = models.CharField(max_length=32, choices=SERVICE_TYPES)
     description = models.TextField()
 
-    administrator = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Admin")
+    administrator = models.ForeignKey(
+        AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Admin")
 
     def __str__(self):
         return self.name
@@ -83,7 +86,6 @@ class Host(models.Model):
         verbose_name_plural = verbose_name
 
 
-@python_2_unicode_compatible
 class MaintainLog(models.Model):
     host = models.ForeignKey(Host, on_delete=models.CASCADE)
     maintain_type = models.CharField(max_length=32)
@@ -101,7 +103,6 @@ class MaintainLog(models.Model):
         verbose_name_plural = verbose_name
 
 
-@python_2_unicode_compatible
 class HostGroup(models.Model):
 
     name = models.CharField(max_length=32)
@@ -117,7 +118,6 @@ class HostGroup(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class AccessRecord(models.Model):
     date = models.DateField()
     user_count = models.IntegerField()

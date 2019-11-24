@@ -10,7 +10,6 @@ from django.db.models.fields import FieldDoesNotExist
 from django.db.models.constants import LOOKUP_SEP
 # from django.db.models.sql.constants import QUERY_TERMS
 from django.template import loader
-from django.utils import six
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext as _
 
@@ -125,7 +124,8 @@ class FilterPlugin(BaseAdminPlugin):
 
                     if len(field_parts) > 1:
                         # Add related model name to title
-                        spec.title = "%s %s" % (field_parts[-2].name, spec.title)
+                        spec.title = "%s %s" % (
+                            field_parts[-2].name, spec.title)
 
                     # Check if we need to use distinct()
                     use_distinct = (use_distinct or
@@ -135,7 +135,8 @@ class FilterPlugin(BaseAdminPlugin):
                         new_qs = spec.do_filte(queryset)
                     except ValidationError as e:
                         new_qs = None
-                        self.admin_view.message_user(_("<b>Filtering error:</b> %s") % e.messages[0], 'error')
+                        self.admin_view.message_user(
+                            _("<b>Filtering error:</b> %s") % e.messages[0], 'error')
                     if new_qs is not None:
                         queryset = new_qs
 
@@ -144,8 +145,7 @@ class FilterPlugin(BaseAdminPlugin):
         self.has_filters = bool(self.filter_specs)
         self.admin_view.filter_specs = self.filter_specs
         obj = filter(lambda f: f.is_used, self.filter_specs)
-        if six.PY3:
-            obj = list(obj)
+        obj = list(obj)
         self.admin_view.used_filter_num = len(obj)
 
         try:
@@ -208,15 +208,15 @@ class FilterPlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        arr = filter(lambda s: isinstance(s, DateFieldListFilter), self.filter_specs)
-        if six.PY3:
-            arr = list(arr)
+        arr = filter(lambda s: isinstance(
+            s, DateFieldListFilter), self.filter_specs)
+        arr = list(arr)
         if bool(arr):
             media = media + self.vendor('datepicker.css', 'datepicker.js',
                                         'xadmin.widget.datetime.js')
-        arr = filter(lambda s: isinstance(s, RelatedFieldSearchFilter), self.filter_specs)
-        if six.PY3:
-            arr = list(arr)
+        arr = filter(lambda s: isinstance(
+            s, RelatedFieldSearchFilter), self.filter_specs)
+        arr = list(arr)
         if bool(arr):
             media = media + self.vendor(
                 'select.js', 'select.css', 'xadmin.widget.select.js')
