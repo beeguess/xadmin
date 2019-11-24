@@ -6,15 +6,14 @@ from setuptools import setup
 
 setup(
     name='xadmin2',
-    version='2.0.1',
-    description=
-    'Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
+    version='2.0.2',
+    description='Drop-in replacement of Django admin comes with lots of goodies, fully extensible with plugin support, pretty UI based on Twitter Bootstrap.',
     long_description=open('README.rst', encoding='utf-8').read(),
     author='wgbbiao',
     author_email='wgb237@163.com',
     license=open('LICENSE', encoding='utf-8').read(),
     url='http://www.xadmin.io',
-    download_url='http://github.com/sshwsfc/django-xadmin/archive/master.zip',
+    download_url='https://github.com/beeguess/xadmin/archive/master.zip',
     packages=[
         'xadmin', 'xadmin.migrations', 'xadmin.plugins', 'xadmin.templatetags',
         'xadmin.views'
@@ -40,8 +39,7 @@ setup(
         'Operating System :: OS Independent',
         "Programming Language :: JavaScript",
         'Programming Language :: Python',
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.7",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Topic :: Software Development :: Libraries :: Python Modules",
